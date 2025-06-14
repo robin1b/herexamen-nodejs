@@ -6,6 +6,7 @@ import { notFound } from "./controllers/notFoundController";
 import testRoutes from "./routes/exampleRoutes";
 import { helloMiddleware } from "./middleware/exampleMiddleware";
 import mongoose from "mongoose";
+import taskRoutes from "./routes/taskRoutes";
 
 // Variables
 const app = express();
@@ -16,6 +17,8 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.use("/api/tasks", taskRoutes);
+
 app.use("/api", helloMiddleware, testRoutes);
 app.all("*", notFound);
 
