@@ -20,7 +20,8 @@
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "mongoose": "^8.9.5"
+    "mongoose": "^8.9.5",
+    "pkgroll": "^2.6.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
