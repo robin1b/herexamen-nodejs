@@ -8,9 +8,13 @@ import { helloMiddleware } from "./middleware/exampleMiddleware";
 import mongoose from "mongoose";
 import taskRoutes from "./routes/taskRoutes";
 import path from "path";
+import { fileURLToPath } from "url";
+import dashboardRoutes from "./routes/dashboardRoutes";
 
 // Variables
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
@@ -23,6 +27,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/tasks", taskRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 app.use("/api", helloMiddleware, testRoutes);
 app.all("*", notFound);

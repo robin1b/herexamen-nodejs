@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <h1>📋 Takenoverzicht</h1>
+
+    <form method="GET" action="/dashboard">
+      <label>
+        Category:
+        <input type="text" name="category" />
+      </label>
+      <label>
+        Priority:
+        <input type="text" name="priority" />
+      </label>
+      <button type="submit">Filter</button>
+    </form>
+
+    <table border="1" cellpadding="10">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Priority</th>
+          <th>Due Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% tasks.forEach(task => { %>
+        <tr>
+          <td><%= task.title %></td>
+          <td><%= task.description %></td>
+          <td><%= task.category %></td>
+          <td><%= task.priority %></td>
+          <td>
+            <%= task.dueDate ? task.dueDate.toISOString().slice(0, 10) : "-" %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </body>
+</html>
