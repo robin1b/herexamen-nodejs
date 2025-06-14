@@ -1,4 +1,8 @@
 // pkgroll.config.mjs
 export default {
-  copy: ["public"],
+  outDir: "dist",
+  copy: [
+    { from: "public", to: "public" },
+    { from: "src/views", to: "views" },
+  ],
 };
