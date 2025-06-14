@@ -68,4 +68,48 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-Happy coding! 🎉
+🌐 API Endpoints
+POST /api/tasks
+Nieuwe taak toevoegen
+
+json
+Kopiëren
+Bewerken
+{
+"title": "Maak een REST API",
+"description": "Schrijf alle API-routes in TypeScript",
+"category": "Development",
+"priority": "high",
+"dueDate": "2025-04-10T12:00:00Z"
+}
+GET /api/tasks
+Haal alle taken op
+Query support:
+
+?category=Development
+
+?priority=high
+
+?sort=dueDate&order=asc
+
+?page=1&limit=10
+
+⚠️ Verlopen dueDate-taken worden automatisch gefilterd
+
+GET /api/tasks/:id
+Specifieke taak ophalen (indien nog niet vervallen)
+
+PUT /api/tasks/:id
+Update een taak
+
+DELETE /api/tasks/:id
+Verwijder een taak
+
+📊 Dashboard (GET /dashboard)
+Eenvoudige EJS-interface:
+
+Alle taken in een tabel
+
+Filters per category en priority
+
+Styling via eigen CSS
