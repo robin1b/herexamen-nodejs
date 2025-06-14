@@ -122,20 +122,29 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
+  const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Ongeldige taak-ID" });
+  }
+
   try {
-    const taskId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(taskId)) {
-      return res.status(400).json({ message: "Ongeldig taak-ID" });
-    }
-    const deletedTask = await Task.findByIdAndDelete(taskId);
+    const deletedTask = await Task.findByIdAndDelete(id);
+
     if (!deletedTask) {
       return res.status(404).json({ message: "Taak niet gevonden" });
     }
-    res.json({ message: "Taak succesvol verwijderd" });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Fout bij het verwijderen van taak", error: err });
+
+    res.json({ message: "Taak succesvol verwijderd", task: deletedTask });
+  } catch (error) {
+    if (error instanceof Error) {
+      res
+        .status(500)
+        .json({ message: "Fout bij verwijderen taak", error: error.message });
+    } else {
+      res.status(500).json({ message: "Onbekende fout bij verwijderen taak" });
+    }
   }
 });
+
 export default router;
