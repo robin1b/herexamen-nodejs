@@ -7,10 +7,15 @@ import testRoutes from "./routes/exampleRoutes";
 import { helloMiddleware } from "./middleware/exampleMiddleware";
 import mongoose from "mongoose";
 import taskRoutes from "./routes/taskRoutes";
+import path from "path";
 
 // Variables
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static("public"));
 
 // Middleware
 app.use(cors());
