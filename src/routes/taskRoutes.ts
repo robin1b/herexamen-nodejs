@@ -1,6 +1,6 @@
 import express from "express";
 import { Task } from "../models/taskModel";
-import mongoose from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ router.get("/", async (req: express.Request, res: express.Response) => {
       limit?: string;
     };
 
-    const filters: Record<string, unknown> = {
+    const filters: FilterQuery<typeof Task> = {
       $or: [{ dueDate: { $gte: new Date() } }, { dueDate: { $exists: false } }],
     };
 
