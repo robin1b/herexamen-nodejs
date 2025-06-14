@@ -1,5 +1,6 @@
 import express from "express";
 import { Task } from "../models/taskModel";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: express.Request, res: express.Response) => {
   try {
     const {
       category,
@@ -60,6 +61,81 @@ router.get("/", async (req, res) => {
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ message: "Taken ophalen mislukt", error });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(taskId)) {
+      return res.status(400).json({ message: "Ongeldig taak-ID" });
+    }
+
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return res.status(404).json({ message: "Taak niet gevonden" });
+    }
+
+    res.json(task);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Fout bij het ophalen van taak", error: err });
+  }
+});
+router.put("/:id", async (req, res) => {
+  const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Ongeldige taak-ID" });
+  }
+
+  try {
+    // Check of de taak bestaat en nog geldig is
+    const existingTask = await Task.findOne({
+      _id: id,
+      $or: [{ dueDate: { $gte: new Date() } }, { dueDate: { $exists: false } }],
+    });
+
+    if (!existingTask) {
+      return res
+        .status(404)
+        .json({ message: "Taak niet gevonden of verlopen" });
+    }
+
+    // Update de taak
+    const updatedTask = await Task.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.json(updatedTask);
+  } catch (error) {
+    if (error instanceof Error) {
+      res
+        .status(500)
+        .json({ message: "Fout bij updaten taak", error: error.message });
+    } else {
+      res.status(500).json({ message: "Onbekende fout bij updaten taak" });
+    }
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(taskId)) {
+      return res.status(400).json({ message: "Ongeldig taak-ID" });
+    }
+    const deletedTask = await Task.findByIdAndDelete(taskId);
+    if (!deletedTask) {
+      return res.status(404).json({ message: "Taak niet gevonden" });
+    }
+    res.json({ message: "Taak succesvol verwijderd" });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Fout bij het verwijderen van taak", error: err });
   }
 });
 export default router;
